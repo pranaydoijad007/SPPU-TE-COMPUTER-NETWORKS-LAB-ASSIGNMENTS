@@ -1,0 +1,128 @@
+/*Experiment no.:09
+  Name: Kirti Chiplunkar
+  Roll no:17
+****************************************************************
+Q. Write a program for error detection and correction for 7/8 bits ASCII codes using CRC.
+Demonstrate the packets captured using Wireshark packet analyzer tool for peer to peer mode.
+****************************************************************
+*/
+
+#include<stdio.h>
+#include<string.h>
+ int main() 
+{
+	int i,j,keylen,msglen;
+	char input[100], input1[100],key[30],temp[30],quot[100],rem[30],key1[30];
+	//clrscr();
+	printf("Enter Data: ");
+	gets(input);
+	strcpy(input1,input);
+	printf("Enter Key: ");
+	gets(key);
+	keylen=strlen(key);
+	msglen=strlen(input);
+	strcpy(key1,key);
+	for (i=0;i<keylen-1;i++)
+	 {
+		input[msglen+i]='0';
+	}
+	for (i=0;i<keylen;i++)
+	{
+	 temp[i]=input[i];
+	}
+	for (i=0;i<msglen;i++) 
+	{
+	    quot[i]=temp[0];
+		if(quot[i]=='0')
+		{
+		 for (j=0;j<keylen;j++)
+		 key[j]='0'; 
+		}
+		else
+		{
+			 for (j=0;j<keylen;j++)
+			{
+			 key[j]=key1[j];
+			}
+		}
+		for (j=keylen-1;j>0;j--)
+		 {
+			if(temp[j]==key[j])
+			 rem[j-1]='0'; else
+			 rem[j-1]='1';
+		}
+		
+		rem[keylen-1]=input[i+keylen];
+		strcpy(temp,rem);
+	
+	}
+		printf("\nencoder");
+	strcpy(rem,temp);
+	printf("\nQuotient is ");
+	for (i=0;i<msglen;i++)
+	 printf("%c",quot[i]);
+	printf("\nRemainder is ");
+	for (i=0;i<keylen-1;i++)
+	 printf("%c",rem[i]);
+	printf("\nnow codeword  is: ");
+	/*for (i=0;i<msglen;i++)
+	 printf("%c",input[i]);
+	for (i=0;i<keylen-1;i++)
+	 printf("%c",rem[i]);*/
+	
+	int sum=(msglen+(keylen-1));
+
+	strcat(input1,rem);
+	for(int i=0;i<sum;i++)
+	{
+		 printf("%c",input1[i]);
+	}
+	char temp1[30],quot1[100],rem1[30];
+	printf("\ndecoder");
+	for (i=0;i<keylen;i++)
+	{
+	 temp1[i]=input1[i];
+	}
+	for (i=0;i<msglen;i++) 
+	{
+	    quot1[i]=temp1[0];
+		if(quot1[i]=='0')
+		{
+		 for (j=0;j<keylen;j++)
+		 key[j]='0'; 
+		}
+		else
+		{
+			 for (j=0;j<keylen;j++)
+			{
+			 key[j]=key1[j];
+			}
+		}
+		for (j=keylen-1;j>0;j--)
+		 {
+			if(temp1[j]==key[j])
+			 rem1[j-1]='0'; else
+			 rem1[j-1]='1';
+		}
+		
+		rem1[keylen-1]=input1[i+keylen];
+		strcpy(temp1,rem1);
+	
+	}
+	strcpy(rem1,temp1);
+	
+	printf("\nQuotient 1 is ");
+	for (i=0;i<msglen;i++)
+	 printf("%c",quot1[i]);
+	printf("\nRemainder 1 is ");
+	for (i=0;i<keylen-1;i++)
+	 printf("%c",rem1[i]);
+	
+	 if (strcmp(rem1,"0"))
+	 printf("\nSyndrome is equal to zero i.e. No Error in the code");
+	 else
+	 printf("\n Error detected");
+//	 getch();
+return 0;
+}
+
